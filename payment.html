@@ -84,7 +84,7 @@
 
     // 3. Polling Function: Check status every 5 seconds
     const checkInterval = setInterval(async () => {
-        const response = await fetch(`https://script.google.com/macros/s/AKfycbwH4oBRLdYer7vjghB131X1eAWC4hcNWryrd73Jydgb5vFMaevNP1ThClpiT84tl9VOTQ/exec`);
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwH4oBRLdYer7vjghB131X1eAWC4hcNWryrd73Jydgb5vFMaevNP1ThClpiT84tl9VOTQ/exec");
         const data = await response.json();
 
         if (data.status === 'closed') { 
