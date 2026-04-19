@@ -71,6 +71,7 @@
 </div>
 
 <script>
+    header("Access-Control-Allow-Origin: *");
     // 1. Get the QR ID from the URL (passed from index.html)
     const urlParams = new URLSearchParams(window.location.search);
     const qrId = urlParams.get('qrId');
