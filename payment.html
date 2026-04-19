@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Payment</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .payment-card {
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 350px;
+            width: 90%;
+        }
+        .qr-placeholder {
+            background: #f9f9f9;
+            border: 2px dashed #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .qr-placeholder img {
+            max-width: 100%;
+            height: auto;
+        }
+        h2 { color: #333; margin-bottom: 10px; }
+        p { color: #666; font-size: 14px; margin-bottom: 25px; }
+        
+        .status-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        .status-btn:hover { background-color: #0056b3; }
+        
+        .loader {
+            display: none; /* Hidden by default */
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="payment-card">
+    <div id="qrContainer">Generating QR...</div>
+    <p id="statusText">Waiting for payment...</p>
+</div>
+
+<script>
+    // 1. Get the QR ID from the URL (passed from index.html)
+    const urlParams = new URLSearchParams(window.location.search);
+    const qrId = urlParams.get('qrId');
+    const qrData = urlParams.get('qrData'); // The UPI string
+
+    // 2. Display the QR Code using a public API
+    if(qrData) {
+        document.getElementById('qrContainer').innerHTML = 
+            `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}">`;
+    }
+
+    // 3. Polling Function: Check status every 5 seconds
+    const checkInterval = setInterval(async () => {
+        const response = await fetch(`https://script.google.com/macros/s/AKfycbwH4oBRLdYer7vjghB131X1eAWC4hcNWryrd73Jydgb5vFMaevNP1ThClpiT84tl9VOTQ/exec`);
+        const data = await response.json();
+
+        if (data.status === 'closed') { 
+            // In Razorpay, 'closed' usually means paid/completed for single-use QRs
+            clearInterval(checkInterval);
+            window.location.href = "success.html";
+        } else if (data.status === 'expired') {
+            clearInterval(checkInterval);
+            alert("Payment expired. Please try again.");
+        }
+    }, 5000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box; /* Ensures padding doesn't break width */
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #45a049; }
+        button:disabled { background-color: #ccc; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Details Form</h2>
+    <form id="infoForm">
+        <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" name="fullName" required>
+        </div>
+        <div class="input-group">
+            <label>Date of Birth</label>
+            <input type="date" name="dob" required>
+        </div>
+        <div class="input-group">
+            <label>Place of Birth</label>
+            <input type="text" name="pob" required>
+        </div>
+        <div class="input-group">
+            <label>Time of Birth</label>
+            <input type="time" name="tob" required>
+        </div>
+        <div class="input-group">
+            <label>Mobile Number</label>
+            <input type="tel" name="mobile" pattern="[0-9]{10}" placeholder="1234567890" required>
+        </div>
+        <button type="submit" id="submitBtn">Submit & Pay</button>
+    </form>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyujfzxfLJy54G_sMFqLNcgvd4byCqesizuqsDTLDg0bv5Ey3u3Rqe12auem-KT7NJvGQ/exec';
+    const form = document.getElementById('infoForm');
+    const btn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.innerHTML = "Processing...";
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                // If successful, redirect to payment page
+                window.location.href = "payment.html";
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                alert("Something went wrong. Check the console.");
+                btn.disabled = false;
+                btn.innerHTML = "Submit & Pay";
+            });
+    });
+</script>
+
+</body>
+</html>
