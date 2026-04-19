@@ -86,7 +86,7 @@
         btn.disabled = true;
         btn.innerHTML = "Processing...";
 
-        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+        fetch(scriptURL, { method: 'POST', mode: 'cors', redirect: 'follow', body: new FormData(form)})
             .then(response => {
                 // If successful, redirect to payment page
                 window.location.href = "payment.html";
