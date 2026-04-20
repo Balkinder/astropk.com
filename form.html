@@ -86,18 +86,27 @@
         btn.disabled = true;
         btn.innerHTML = "Processing...";
 
-        fetch(scriptURL, { method: 'POST', body: new FormData(form), mode: 'no-cors'})
-            .then(response => {
-                // If successful, redirect to payment page
+        // 1. Create a hidden iframe so the page doesn't refresh
+        var iframe = document.createElement('iframe');
+        iframe.name = 'hidden_iframe';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+
+        // 2. Point the form to the Google Script and the hidden iframe
+        form.action = 'https://script.google.com/macros/s/AKfycbyujfzxfLJy54G_sMFqLNcgvd4byCqesizuqsDTLDg0bv5Ey3u3Rqe12auem-KT7NJvGQ/exec';
+        form.method = 'POST';
+        form.target = 'hidden_iframe';
+
+        // 3. Submit the form
+        form.submit();
+
+        // 4. Since we can't "read" the response from the iframe, 
+        // we wait 2 seconds for the data to reach Google, then redirect.
+        setTimeout(() => {
                 window.location.href = "payment.html";
-            })
-            .catch(error => {
-                console.error('Error!', error.message);
-                alert("Something went wrong. Check the console.");
-                btn.disabled = false;
-                btn.innerHTML = "Submit & Pay";
-            });
-    });
+            }, 2000);
+        });
+
 </script>
 
 </body>
