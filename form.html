@@ -77,7 +77,7 @@
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxXznGIfy8JNqWFFnquU7rsyDiEcKVsxxqK8exU0CBI/dev';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyujfzxfLJy54G_sMFqLNcgvd4byCqesizuqsDTLDg0bv5Ey3u3Rqe12auem-KT7NJvGQ/exec';
     const form = document.getElementById('infoForm');
     const btn = document.getElementById('submitBtn');
 
@@ -86,7 +86,7 @@
         btn.disabled = true;
         btn.innerHTML = "Processing...";
 
-        fetch(scriptURL, { method: 'POST', mode: 'cors', redirect: 'follow', body: new FormData(form)})
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
             .then(response => {
                 // If successful, redirect to payment page
                 window.location.href = "payment.html";
